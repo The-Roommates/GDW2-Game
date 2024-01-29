@@ -32,7 +32,6 @@ public class Player : MonoBehaviour
         InitializePlayer();
     }
 
-    // Update is called once per frame
     void Update()
     {
         GetInput();
@@ -42,7 +41,7 @@ public class Player : MonoBehaviour
     void GetInput()
     {
         var inputDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
-        // If the input direction is 0, set movement direction to 0, which allows for decelaration to start.
+        // if the input direction is 0, set movement direction to 0, which allows for decelaration to start.
         // if it is not 0, set the facingdirection AND movementDirection = inputDirection;
         // done this way to maintain facing direction (used for attacking) while allowing for deceleration when movementDirection = (0,0).
         movementDirection = inputDirection != Vector2.zero ? facingDirection = inputDirection : Vector2.zero; 
