@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour
     {
         enemyType = GetRandomEnemyType();
         enemyInstance = GetEnemyType();
+        gameObject.name = enemyType.ToSafeString();
 
         StartCoroutine(enemyInstance.Attack());
     }
@@ -31,6 +32,13 @@ public class Enemy : MonoBehaviour
     {
         switch (enemyType) // im sure there is a more efficient way of doing this, where i don't need to make a new case for each new enemy, but this will suffice for our purposes.
         {
+
+            /* blank example.
+             case EnemyTypes. :
+                return new   (transform, GetComponent<Rigidbody2D>());
+             */
+
+
             case EnemyTypes.TestEnemy1:
                 return new TestEnemy1(transform, GetComponent<Rigidbody2D>());
             case EnemyTypes.TestEnemy2:
@@ -68,8 +76,8 @@ public class EnemyStats
     public readonly float attackRate;
     public readonly float attackRange;
     public readonly float attackWindupTime = 0.25f; /// <summary>
-                                   /// amount of time you must stay in range before the attack happens.
-                                   /// </summary>
+                                                    /// amount of time you must stay in range before the attack happens.
+                                                    /// </summary>
 
     public EnemyStats(int maxhp, int attack, int defence, float speed, float attackrate, float attackrange)
     {
@@ -90,6 +98,7 @@ public class EnemyType
     public EnemyStats stats;
     public Transform transform;
     public Rigidbody2D rb;
+    public Sprite enemySprite;
 
 
     public virtual IEnumerator Attack()
