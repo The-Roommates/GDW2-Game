@@ -6,7 +6,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public EnemyTypes enemyType;
-    [SerializeField] EnemyType enemyInstance;
+    public EnemyType enemyInstance;
 
     private void Start()
     {
@@ -79,7 +79,7 @@ public class EnemyStats
                                                     /// amount of time you must stay in range before the attack happens.
                                                     /// </summary>
 
-    public EnemyStats(int maxhp, int attack, int defence, float speed, float attackrate, float attackrange)
+    public EnemyStats(int maxhp, int attack, int defence, float speed, float attackrate, float attackrange, float attackWindup = 0.25f)
     {
         maxHp = maxhp;
         currentHP = maxHp;
@@ -88,6 +88,7 @@ public class EnemyStats
         this.speed = speed;
         attackRate = attackrate;
         attackRange = attackrange;
+        attackWindupTime = attackWindup;
     }
 
 }
@@ -98,7 +99,6 @@ public class EnemyType
     public EnemyStats stats;
     public Transform transform;
     public Rigidbody2D rb;
-    public Sprite enemySprite;
 
 
     public virtual IEnumerator Attack()
@@ -110,8 +110,7 @@ public class EnemyType
                 yield return new WaitForSecondsRealtime(stats.attackWindupTime);
                 if (Vector2.Distance(Player.instance.transform.position, transform.position) < stats.attackRange)
                 {
-                    // DamagePlayer();
-                    Debug.Log("hit");
+                    Player.instance.TakeDamage(stats.attack);
                     float duration = Mathf.Clamp(1 / stats.attackRate - stats.attackWindupTime, 0, Mathf.Infinity); // 
                     yield return new WaitForSecondsRealtime(duration);
                 }
@@ -139,7 +138,7 @@ public class TestEnemy1 : EnemyType
     {
         this.transform = transform;
         this.rb = rb;
-        stats = new(10, 10, 0, 1, 1, 100);
+        stats = new(10, 1, 0, 0f, 1f, 2f);
 
     }
 
@@ -151,7 +150,7 @@ public class TestEnemy2 : EnemyType
     {
         this.transform = transform;
         this.rb = rb;
-        stats = new(5, 5, 0, 1, 1, 100);
+        stats = new(5, 1, 0, 0f, 1f, 2f);
 
     }
 
