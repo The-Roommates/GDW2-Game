@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
-    [SerializeField] GameObject[] prefabs;
+    
     [SerializeField] int quantity = 1000;
-    [SerializeField] Vector2 squareSize;
     [SerializeField] float minDistance;
-    int maxAttempts = 100;
+    [SerializeField] readonly GameObject[] prefabs;
     List<Vector2> spawnedPositions = new List<Vector2>();
+    Vector2 squareSize;
+    readonly int maxAttempts = 50;
 
     void Start()
     {

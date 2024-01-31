@@ -11,10 +11,12 @@ public class Player : MonoBehaviour
     [SerializeField] Vector2 movementDirection;
     [SerializeField] Vector2 facingDirection;
     Rigidbody2D rb;
-    [SerializeField] float acceleration, baseAcceleration;
+    [SerializeField] float acceleration;
+    [SerializeField] readonly float baseAcceleration;
     [SerializeField] float deceleration;
-    [SerializeField] float maxSpeed, baseMaxSpeed;
-    [SerializeField] LayerMask attackLayerMask;
+    [SerializeField] float maxSpeed; 
+    [SerializeField] readonly float baseMaxSpeed;
+    [SerializeField] readonly LayerMask attackLayerMask;
 
 
     private void Awake()

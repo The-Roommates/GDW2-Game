@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         enemyType = GetRandomEnemyType();
-        enemyInstance = GetEnemyType();
+        enemyInstance = AssignEnemyTypeClass();
         gameObject.name = enemyType.ToSafeString();
 
         StartCoroutine(enemyInstance.Attack());
@@ -28,7 +28,7 @@ public class Enemy : MonoBehaviour
     }
 
 
-    EnemyType GetEnemyType()
+    EnemyType AssignEnemyTypeClass()
     {
         switch (enemyType) // im sure there is a more efficient way of doing this, where i don't need to make a new case for each new enemy, but this will suffice for our purposes.
         {
@@ -115,6 +115,7 @@ public class EnemyType
                     yield return new WaitForSecondsRealtime(duration);
                 }
             }
+            yield return null;
         }
     }
 
