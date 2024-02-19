@@ -8,14 +8,14 @@ public class Player : MonoBehaviour
 {
     public static Player instance;
     public PlayerStats playerStats = new(0, 0, 0, 0, 0, 0);
-    [SerializeField] Vector2 movementDirection;
-    [SerializeField] Vector2 facingDirection;
-    Rigidbody2D rb;
+    [SerializeField] Vector3 movementDirection;
+    [SerializeField] Vector3 facingDirection;
+    Rigidbody rb;
     [SerializeField] float acceleration;
-    [SerializeField] readonly float baseAcceleration;
-    [SerializeField] float deceleration;
+    [SerializeField] readonly float baseAcceleration =5;
+    [SerializeField] float deceleration = 5;
     [SerializeField] float maxSpeed; 
-    [SerializeField] readonly float baseMaxSpeed;
+    [SerializeField] readonly float baseMaxSpeed = 5;
     [SerializeField] readonly LayerMask attackLayerMask;
 
 
@@ -37,21 +37,26 @@ public class Player : MonoBehaviour
     void Update()
     {
         GetInput();
+
+    }
+
+    private void FixedUpdate()
+    {
         MovePlayer();
     }
 
     void GetInput()
     {
-        var inputDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+        var inputDirection = new Vector3(Input.GetAxisRaw("Horizontal"),0, Input.GetAxisRaw("Vertical")).normalized;
         // if the input direction is 0, set movement direction to 0, which allows for decelaration to start.
         // if it is not 0, set the facingdirection AND movementDirection = inputDirection;
         // done this way to maintain facing direction (used for attacking) while allowing for deceleration when movementDirection = (0,0).
-        movementDirection = inputDirection != Vector2.zero ? facingDirection = inputDirection : Vector2.zero; 
+        movementDirection = inputDirection != Vector3.zero ? facingDirection = inputDirection : Vector3.zero; 
     }
 
     void GetReferences()
     {
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void InitializePlayer()
@@ -63,12 +68,12 @@ public class Player : MonoBehaviour
 
     void MovePlayer()
     {
-        if (movementDirection == Vector2.zero) // if no directional input is held, decelerate the player.
+        if (movementDirection == Vector3.zero) // if no directional input is held, decelerate the player.
         {
-            rb.velocity = Vector2.Lerp(rb.velocity, Vector2.zero, deceleration);
+            rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, deceleration);
         }
-        else { rb.velocity += movementDirection * (acceleration); }// otherwise, accelerate the player in the direction held.
-        rb.velocity = Vector2.ClampMagnitude(rb.velocity, maxSpeed); // clamp velocity magnitute to cap the players speed.
+        else { rb.velocity -= movementDirection * (acceleration); }// otherwise, accelerate the player in the direction held.
+        rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSpeed); // clamp velocity magnitute to cap the players speed.
     }
 
     public void ApplyStatChanges() 
@@ -91,7 +96,7 @@ public class Player : MonoBehaviour
             {   
                 // calculate size and position of attack box.
                 Vector2 attackSize = Vector2.one * playerStats.attackRange;
-                Vector2 attackPosition = (Vector2)transform.position + facingDirection;
+                Vector2 attackPosition = transform.position + facingDirection;
                 // find all enemy colliders.
                 Collider2D[] colliders = Physics2D.OverlapBoxAll(attackPosition, attackSize / 2f, 0f, attackLayerMask);
                 foreach (Collider2D collider in colliders)

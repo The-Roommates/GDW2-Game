@@ -3,28 +3,33 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
+
 public class Enemy : MonoBehaviour
 {
-    public EnemyTypes enemyType;
+    public EnemyTypes enemyType = EnemyTypes.Cockroach;
     public EnemyType enemyInstance;
 
     private void Start()
     {
-        enemyType = GetRandomEnemyType();
         enemyInstance = AssignEnemyTypeClass();
         gameObject.name = enemyType.ToSafeString();
 
-        StartCoroutine(enemyInstance.Attack());
+
     }
 
     void Update()
     {
-        MoveEnemy();
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            StartEnemy();
+        }
     }
 
-    void MoveEnemy()
+    void StartEnemy() 
     {
         enemyInstance.Move();
+        StartCoroutine(enemyInstance.Attack());
     }
 
 
@@ -39,10 +44,10 @@ public class Enemy : MonoBehaviour
              */
 
 
-            case EnemyTypes.TestEnemy1:
-                return new TestEnemy1(transform, GetComponent<Rigidbody2D>());
-            case EnemyTypes.TestEnemy2:
-                return new TestEnemy2(transform, GetComponent<Rigidbody2D>());
+            case EnemyTypes.Cockroach:
+                return new Cockroach(transform, GetComponent<Rigidbody>(), GetComponent<NavMeshAgent>());
+            case EnemyTypes.Rat:
+                return new Rat(transform, GetComponent<Rigidbody>(), GetComponent<NavMeshAgent>());
             default:
                 Debug.LogError("EnemyType Not Found");
                 return null;
@@ -59,8 +64,8 @@ public class Enemy : MonoBehaviour
 [System.Serializable]
 public enum EnemyTypes // used in the selection of enemies
 {
-    TestEnemy1,
-    TestEnemy2,
+    Cockroach,
+    Rat,
 }
 
 
@@ -98,8 +103,17 @@ public class EnemyType
 {
     public EnemyStats stats;
     public Transform transform;
-    public Rigidbody2D rb;
+    public Rigidbody rb;
+    public NavMeshAgent navAgent;
 
+
+
+    internal EnemyType(Transform transform, Rigidbody rb, NavMeshAgent navAgent)
+    {
+        this.transform = transform;
+        this.rb = rb;
+        this.navAgent = navAgent;
+    }
 
     public virtual IEnumerator Attack()
     {
@@ -130,29 +144,81 @@ public class EnemyType
         Vector2 movementDirection = (Player.instance.transform.position - transform.position).normalized;
         rb.velocity = movementDirection * stats.speed;
     }
+
 }
 
 
-public class TestEnemy1 : EnemyType
+public class Cockroach : EnemyType
 {
-    public TestEnemy1(Transform transform, Rigidbody2D rb)
+    public Cockroach(Transform transform, Rigidbody rb, NavMeshAgent navMeshAgent) : base(transform, rb, navMeshAgent)
     {
-        this.transform = transform;
-        this.rb = rb;
-        stats = new(10, 1, 0, 0f, 1f, 2f);
 
+        stats = new(10, 1, 0, 1f, 1f, 2f);
+        navAgent.speed = stats.speed;
+
+    }
+
+    public override void Move()
+    {
+        navAgent.SetDestination(GameManager.GetGarbagePilePosition());
+        
+    }
+
+    public override IEnumerator Attack()
+    {
+        while (true)
+        {
+            if (Vector3.Distance(transform.position, navAgent.destination) < 0.4f)
+            {
+                yield return new WaitForSecondsRealtime(stats.attackRate);
+                Debug.Log("Hit");
+                // Make it effect garbage piles.
+            }
+            yield return null;
+        }
     }
 
 }
 
-public class TestEnemy2 : EnemyType
+public class Rat : EnemyType
 {
-    public TestEnemy2(Transform transform, Rigidbody2D rb)
+    Coroutine retargetCoroutine;
+    public Rat(Transform transform, Rigidbody rb, NavMeshAgent navMeshAgent) : base(transform, rb, navMeshAgent)
     {
-        this.transform = transform;
-        this.rb = rb;
-        stats = new(5, 1, 0, 0f, 1f, 2f);
+
+        stats = new(5, 1, 0, 1f, 1f, 2f);
+        navAgent.speed = stats.speed;
 
     }
 
+    public override void Move()
+    {
+        navAgent.SetDestination(Player.instance.transform.position);
+        if (retargetCoroutine != null) { GameManager.instance.StopCoroutine(retargetCoroutine); }
+        retargetCoroutine = GameManager.instance.StartCoroutine(RetargetPlayer());
+
+    }
+
+    IEnumerator RetargetPlayer()
+    {
+        while (true)
+        {
+            yield return null;
+            navAgent.SetDestination(Player.instance.transform.position);
+            yield return new WaitForSecondsRealtime(0.1f);
+        }
+    }
+
+
+
+}
+
+public class Raccoon : EnemyType
+{
+    public Raccoon(Transform transform, Rigidbody rb, NavMeshAgent navMeshAgent) : base (transform, rb, navMeshAgent)
+    {
+
+        stats = new EnemyStats(0, 0, 0, 0, 0,0);
+        navAgent.speed = stats.speed;
+    }
 }
