@@ -11,6 +11,10 @@ public class GameManager : MonoBehaviour
     public static EnemyTypes[] enemyTypesArray = (EnemyTypes[])Enum.GetValues(typeof(EnemyTypes)); // on awake, turns the EnemyTypes enum into an array so that i can randomly select them with an index number.
     public static Transform[] garbagePiles;
     public static float difficultyModifier;
+    public GameObject cleanlinessBarPrefab;
+    public Transform cleanlinessBarHolder;
+    public Gradient cleanlinessBarGradient;
+    public LayerMask enemyLayerMask;
 
     private void Awake()
     {
@@ -21,7 +25,7 @@ public class GameManager : MonoBehaviour
         else { Destroy(this); }
 
         Application.targetFrameRate = 60;
-
+        
         // fill garbagepiles with the children of gamemanaager object.
         garbagePiles =  GetComponentsInChildren<Transform>().Where(childTransform => childTransform != transform).ToArray();
     }

@@ -7,7 +7,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public static Player instance;
-    public PlayerStats playerStats = new(0, 0, 0, 0, 0, 0);
+    public PlayerStats playerStats = new (1,1,1,1,1,1,10);
+    public static Transform playerTransform;
     [SerializeField] Vector3 movementDirection;
     [SerializeField] Vector3 facingDirection;
     Rigidbody rb;
@@ -17,6 +18,7 @@ public class Player : MonoBehaviour
     [SerializeField] float maxSpeed; 
     [SerializeField] readonly float baseMaxSpeed = 5;
     [SerializeField] readonly LayerMask attackLayerMask;
+    [SerializeField] bool isCleaningPile;
 
 
     private void Awake()
@@ -57,6 +59,7 @@ public class Player : MonoBehaviour
     void GetReferences()
     {
         rb = GetComponent<Rigidbody>();
+        playerTransform = transform;
     }
 
     void InitializePlayer()
@@ -92,7 +95,7 @@ public class Player : MonoBehaviour
     {
         while (true)
         {
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Space) && !isCleaningPile)
             {   
                 // calculate size and position of attack box.
                 Vector2 attackSize = Vector2.one * playerStats.attackRange;
@@ -136,8 +139,9 @@ public class PlayerStats
     public float speed;
     public float attackRate;
     public float attackRange;
+    public float cleanStrength;
 
-    public PlayerStats(int maxhp, int attack, int defence, float speed, float attackrate, float attackrange)
+    public PlayerStats(int maxhp, int attack, int defence, float speed, float attackrate, float attackrange, float cleanStrength)
     {
         maxHP = maxhp;
         currentHP = maxhp;
@@ -146,5 +150,6 @@ public class PlayerStats
         this.speed = speed;
         this.attackRate = attackrate;
         this.attackRange = attackrange;
+        this.cleanStrength = cleanStrength;
     }
 }

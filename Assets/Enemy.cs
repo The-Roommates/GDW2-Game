@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
 {
     public EnemyTypes enemyType = EnemyTypes.Cockroach;
     public EnemyType enemyInstance;
+    public GarbagePile targetGarbagePile;
 
     private void Start()
     {
@@ -26,7 +27,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void StartEnemy() 
+    void StartEnemy()
     {
         enemyInstance.Move();
         StartCoroutine(enemyInstance.Attack());
@@ -105,6 +106,7 @@ public class EnemyType
     public Transform transform;
     public Rigidbody rb;
     public NavMeshAgent navAgent;
+    public GarbagePile targetGarbagePile;
 
 
 
@@ -144,6 +146,9 @@ public class EnemyType
         Vector2 movementDirection = (Player.instance.transform.position - transform.position).normalized;
         rb.velocity = movementDirection * stats.speed;
     }
+    public virtual void SetDestination(Vector3 destination)
+    {
+    }
 
 }
 
@@ -161,26 +166,36 @@ public class Cockroach : EnemyType
     public override void Move()
     {
         navAgent.SetDestination(GameManager.GetGarbagePilePosition());
-        
+
     }
 
     public override IEnumerator Attack()
     {
         while (true)
         {
+            Debug.Log("atk"+ Vector3.Distance(transform.position, navAgent.destination));
             if (Vector3.Distance(transform.position, navAgent.destination) < 0.4f)
             {
+                Debug.Log("distance");
                 yield return new WaitForSecondsRealtime(stats.attackRate);
-                Debug.Log("Hit");
+                if (targetGarbagePile != null)
+                {
+                    Debug.Log("hit");
+                    targetGarbagePile.DecayFromEnemy(stats.attack);
+                }
+                else { Debug.Log("null"); }
                 // Make it effect garbage piles.
             }
             yield return null;
         }
     }
-
+    public override void SetDestination(Vector3 destination)
+    {
+        navAgent.destination = destination;
+    } 
 }
 
-public class Rat : EnemyType
+    public class Rat : EnemyType
 {
     Coroutine retargetCoroutine;
     public Rat(Transform transform, Rigidbody rb, NavMeshAgent navMeshAgent) : base(transform, rb, navMeshAgent)
@@ -215,10 +230,10 @@ public class Rat : EnemyType
 
 public class Raccoon : EnemyType
 {
-    public Raccoon(Transform transform, Rigidbody rb, NavMeshAgent navMeshAgent) : base (transform, rb, navMeshAgent)
+    public Raccoon(Transform transform, Rigidbody rb, NavMeshAgent navMeshAgent) : base(transform, rb, navMeshAgent)
     {
 
-        stats = new EnemyStats(0, 0, 0, 0, 0,0);
+        stats = new EnemyStats(0, 0, 0, 0, 0, 0);
         navAgent.speed = stats.speed;
     }
 }
