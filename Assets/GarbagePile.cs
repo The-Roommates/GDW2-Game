@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GarbagePile : MonoBehaviour
 {
@@ -19,8 +20,11 @@ public class GarbagePile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        cleanlinessBar = Instantiate(GameManager.instance.cleanlinessBarPrefab,
-                         GameManager.instance.cleanlinessBarHolder).GetComponent<Slider>();
+        GameObject cleanlinessBarObject = Instantiate(GameManager.instance.cleanlinessBarPrefab,
+                         GameManager.instance.cleanlinessBarHolder);
+        cleanlinessBar = cleanlinessBarObject.GetComponent<Slider>();
+        cleanlinessBarObject.GetComponentInChildren<TextMeshProUGUI>().text = gameObject.name;
+        
         cleanlinessDecayCoroutine = StartCoroutine(CleanlinessDecay());
         cleanCorutine = StartCoroutine(Clean());
     }
@@ -32,7 +36,6 @@ public class GarbagePile : MonoBehaviour
 
     private void OnTriggerEnter(Collider col)
     {
-        Debug.Log("hi");
         if (col.TryGetComponent(out Enemy enemy))
         {
             nearbyEnemies.Add(enemy);
@@ -57,7 +60,8 @@ public class GarbagePile : MonoBehaviour
             if (isCleaning) { yield return null;  continue; } // if you are actively cleaning this pile, skip decaying it.
             SetBarValue(cleanliness = Mathf.Clamp(cleanliness -= decay, 0, 100));
             if(cleanliness <= 0) {
-            
+
+                GameManager.instance.CleanlinessTimeout();
             // whatever end game/kill player stuff  we need.
             
             }

@@ -41,4 +41,9 @@ public class GameManager : MonoBehaviour
         return garbagePiles[index].position;
     }
 
+    public void CleanlinessTimeout()
+    {
+        Debug.Log("game over");
+    }
+
 }

@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
     [SerializeField] float deceleration = 5;
     [SerializeField] float maxSpeed; 
     [SerializeField] readonly float baseMaxSpeed = 5;
-    [SerializeField] readonly LayerMask attackLayerMask;
+    [SerializeField] LayerMask attackLayerMask;
     [SerializeField] bool isCleaningPile;
 
 
@@ -95,16 +95,21 @@ public class Player : MonoBehaviour
     {
         while (true)
         {
-            if (Input.GetKey(KeyCode.Space) && !isCleaningPile)
+            if (Input.GetKey(KeyCode.Space))
             {   
                 // calculate size and position of attack box.
-                Vector2 attackSize = Vector2.one * playerStats.attackRange;
-                Vector2 attackPosition = transform.position + facingDirection;
+                Vector3 attackSize = Vector3.one * playerStats.attackRange;
+                Vector3 attackPosition = transform.position -facingDirection*0.85f;
+
+               /* var temp = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube));
+                temp.transform.position = attackPosition;
+                temp.transform.localScale = attackSize;*/
                 // find all enemy colliders.
-                Collider2D[] colliders = Physics2D.OverlapBoxAll(attackPosition, attackSize / 2f, 0f, attackLayerMask);
-                foreach (Collider2D collider in colliders)
+                Collider[] colliders = Physics.OverlapBox(attackPosition, attackSize / 2f, Quaternion.Euler(Vector3.zero), attackLayerMask);
+                foreach (Collider collider in colliders)
                 {
                     collider.GetComponent<Enemy>().enemyInstance.TakeDamage(playerStats.attack);
+                    Debug.Log(collider.name);
                 }
                 DebugDrawOverlapBox(attackPosition, attackSize, Color.red);
                 yield return new WaitForSecondsRealtime(1 / playerStats.attackRate);

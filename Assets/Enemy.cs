@@ -139,8 +139,15 @@ public class EnemyType
     {
         int damageTaken = ignoreDefence ? damage : damage - stats.defence; // if ignoreDefence, take the full value, otherwise subtract the enemy defence stat from the damage.
         stats.currentHP -= damageTaken;
+        if(stats.currentHP <= 0)
+        {
+            KillEnemy();
+        }
     }
-
+    public virtual void KillEnemy()
+    {
+        UnityEngine.Object.Destroy(transform.gameObject);
+    }
     public virtual void Move()
     {
         Vector2 movementDirection = (Player.instance.transform.position - transform.position).normalized;
@@ -158,7 +165,7 @@ public class Cockroach : EnemyType
     public Cockroach(Transform transform, Rigidbody rb, NavMeshAgent navMeshAgent) : base(transform, rb, navMeshAgent)
     {
 
-        stats = new(10, 1, 0, 1f, 1f, 2f);
+        stats = new(5, 1, 0, 1f, 1f, 2f);
         navAgent.speed = stats.speed;
 
     }
@@ -173,18 +180,13 @@ public class Cockroach : EnemyType
     {
         while (true)
         {
-            Debug.Log("atk"+ Vector3.Distance(transform.position, navAgent.destination));
             if (Vector3.Distance(transform.position, navAgent.destination) < 0.4f)
             {
-                Debug.Log("distance");
                 yield return new WaitForSecondsRealtime(stats.attackRate);
                 if (targetGarbagePile != null)
                 {
-                    Debug.Log("hit");
                     targetGarbagePile.DecayFromEnemy(stats.attack);
                 }
-                else { Debug.Log("null"); }
-                // Make it effect garbage piles.
             }
             yield return null;
         }
