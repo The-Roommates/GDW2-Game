@@ -15,7 +15,7 @@ public class PlayerAttack : MonoBehaviour
     {
         if(timeUntilMelee <= 0f)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetKeyDown(KeyCode.O))
             {
                 anim.SetTrigger("Attack");
                 timeUntilMelee = meleeSpeed;
@@ -31,7 +31,7 @@ public class PlayerAttack : MonoBehaviour
     {
         if(other.tag == "Enemy")
         {
-            //other.GetComponent<Enemy>().TakeDamage(damage);
+            other.GetComponent<EnemyDefinition>().TakeDamage(damage);
             Debug.Log("Enemy Hit");
         }
     }

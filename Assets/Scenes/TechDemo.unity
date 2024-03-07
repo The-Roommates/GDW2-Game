@@ -416,6 +416,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &145799770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 145799763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 595fae932108c564fa24a58a2ec611a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  rb: {fileID: 0}
 --- !u!1 &150773516
 GameObject:
   m_ObjectHideFlags: 0
@@ -841,6 +855,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: roach (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3220308954632700201, guid: a1244f174b65ebf4b9aba6114f49821a, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 3220308954632700203, guid: a1244f174b65ebf4b9aba6114f49821a, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -1167,6 +1185,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &563433483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 563433476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 595fae932108c564fa24a58a2ec611a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  rb: {fileID: 563433481}
 --- !u!1001 &564284791
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2047,6 +2079,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: roach (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 3220308954632700201, guid: a1244f174b65ebf4b9aba6114f49821a, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 3220308954632700203, guid: a1244f174b65ebf4b9aba6114f49821a, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -2838,6 +2874,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1384600927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1384600920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 595fae932108c564fa24a58a2ec611a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  rb: {fileID: 0}
 --- !u!1 &1407353952
 GameObject:
   m_ObjectHideFlags: 0
@@ -3342,7 +3392,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anim: {fileID: 1541288092}
   meleeSpeed: 0.1
-  damage: 50
+  damage: 20
 --- !u!1001 &1627174035
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3579,6 +3629,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1727111278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727111271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 595fae932108c564fa24a58a2ec611a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  rb: {fileID: 0}
 --- !u!1 &1737655197
 GameObject:
   m_ObjectHideFlags: 0
@@ -3780,6 +3844,10 @@ PrefabInstance:
     - target: {fileID: 3220308954632700201, guid: a1244f174b65ebf4b9aba6114f49821a, type: 3}
       propertyPath: m_Name
       value: roach (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3220308954632700201, guid: a1244f174b65ebf4b9aba6114f49821a, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 3220308954632700203, guid: a1244f174b65ebf4b9aba6114f49821a, type: 3}
       propertyPath: m_RootOrder
@@ -4941,6 +5009,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &2054299350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2054299343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 595fae932108c564fa24a58a2ec611a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  rb: {fileID: 0}
 --- !u!1 &2143378237
 GameObject:
   m_ObjectHideFlags: 0
@@ -5138,6 +5220,10 @@ PrefabInstance:
     - target: {fileID: 3220308954632700201, guid: a1244f174b65ebf4b9aba6114f49821a, type: 3}
       propertyPath: m_Name
       value: roach
+      objectReference: {fileID: 0}
+    - target: {fileID: 3220308954632700201, guid: a1244f174b65ebf4b9aba6114f49821a, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 3220308954632700203, guid: a1244f174b65ebf4b9aba6114f49821a, type: 3}
       propertyPath: m_RootOrder

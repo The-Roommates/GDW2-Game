@@ -7,8 +7,8 @@ public class T_PlayerMovement : MonoBehaviour
 {
     //Player Definition
     Rigidbody2D body;
-    float speed = 4f;
 
+    float speed = 4f;
     float horizontal;
     float vertical;
 

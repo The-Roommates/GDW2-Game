@@ -11,6 +11,9 @@ public class RoachBehaviour : MonoBehaviour
     public Vector3 spawnpoint;
     public Quaternion newRotation;
 
+    //Player Attack Comp
+
+
     
 
     // Start is called before the first frame update
