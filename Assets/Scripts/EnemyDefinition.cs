@@ -12,6 +12,8 @@ public class EnemyDefinition : MonoBehaviour
 
     public Rigidbody2D rb;
 
+
+
     
 
 
