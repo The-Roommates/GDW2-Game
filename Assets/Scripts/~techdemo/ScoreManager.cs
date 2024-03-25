@@ -5,13 +5,24 @@ using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
+    public static ScoreManager instance;
     public Text score;
     int scoreCount = 0;
 
     public AudioSource coinsnd;
     public AudioClip coin_;
 
-
+    private void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -28,23 +39,23 @@ public class ScoreManager : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.O))
         {
-            scoreCount++;
+
         }
-        
-        
+
+
 
 
     }
-
-    public void OnCollisionEnter2D(Collision2D collision)
+    public void EnemyKilled()
     {
-        if (collision.gameObject.tag == "Player")
-        {
-            gameObject.SetActive(false);
-            scoreCount = scoreCount + 1;
-
-            coinsnd.PlayOneShot(coin_);
-
-        }
+        scoreCount+=3;
+        score.text=scoreCount.ToString();
+    }
+    public void CoinCollect()
+    {
+        scoreCount ++;
+        score.text = scoreCount.ToString();
+        Debug.Log(scoreCount);
+        coinsnd.PlayOneShot(coin_);
     }
 }

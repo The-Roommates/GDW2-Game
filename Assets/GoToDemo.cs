@@ -7,6 +7,6 @@ public class GoToDemo : MonoBehaviour
 {
     public void NextScene()
     {
-        SceneManager.LoadScene("TechDemo");
+        SceneManager.LoadScene("GameDemo");
     }
 }

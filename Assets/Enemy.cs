@@ -10,11 +10,14 @@ public class Enemy : MonoBehaviour
     public EnemyTypes enemyType = EnemyTypes.Cockroach;
     public EnemyType enemyInstance;
     public GarbagePile targetGarbagePile;
+    SpriteRenderer spriteRenderer;
 
     private void Start()
     {
         enemyInstance = AssignEnemyTypeClass();
         gameObject.name = enemyType.ToSafeString();
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        StartEnemy();
 
 
     }
@@ -59,6 +62,29 @@ public class Enemy : MonoBehaviour
     {
         return GameManager.enemyTypesArray[UnityEngine.Random.Range(0, GameManager.enemyTypesArray.Length)];
     }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Attack"))
+        {
+            enemyInstance.TakeDamage(T_PlayerMovement.instance.playerStats.attack);
+            StartCoroutine(FlashRed());
+        }
+        else if (collision.collider.CompareTag("Player"))
+        {
+            T_PlayerMovement.instance.playerStats.currentHP -= enemyInstance.stats.attack;
+            T_PlayerMovement.instance.CheckKillPlayer();
+            Health.UpdateHealthText();
+        }
+    }
+
+    public IEnumerator FlashRed()
+    {
+        Color startCol = spriteRenderer.color;
+        spriteRenderer.color = new(1, 0, 0, 0.5f);
+        yield return new WaitForSecondsRealtime(0.33f);
+        spriteRenderer.color = startCol;
+    }
 }
 
 
@@ -67,6 +93,7 @@ public enum EnemyTypes // used in the selection of enemies
 {
     Cockroach,
     Rat,
+    Raccoon
 }
 
 
@@ -139,13 +166,15 @@ public class EnemyType
     {
         int damageTaken = ignoreDefence ? damage : damage - stats.defence; // if ignoreDefence, take the full value, otherwise subtract the enemy defence stat from the damage.
         stats.currentHP -= damageTaken;
-        if(stats.currentHP <= 0)
+        Debug.Log(damage);
+        if (stats.currentHP <= 0)
         {
             KillEnemy();
         }
     }
     public virtual void KillEnemy()
     {
+        UnityEngine.Object.FindObjectOfType<ScoreManager>().EnemyKilled();
         UnityEngine.Object.Destroy(transform.gameObject);
     }
     public virtual void Move()
@@ -162,6 +191,7 @@ public class EnemyType
 
 public class Cockroach : EnemyType
 {
+    Coroutine moveCoroutine;
     public Cockroach(Transform transform, Rigidbody rb, NavMeshAgent navMeshAgent) : base(transform, rb, navMeshAgent)
     {
 
@@ -172,7 +202,10 @@ public class Cockroach : EnemyType
 
     public override void Move()
     {
-        navAgent.SetDestination(GameManager.GetGarbagePilePosition());
+        if (moveCoroutine == null)
+        {
+            moveCoroutine = rb.GetComponent<Enemy>().StartCoroutine(LoopMovement());
+        }
 
     }
 
@@ -191,19 +224,31 @@ public class Cockroach : EnemyType
             yield return null;
         }
     }
+
+
+    IEnumerator LoopMovement()
+    {
+        yield return new WaitForSecondsRealtime(1.25f);
+        while (true)
+        {
+            SetDestination(GameManager.GetGarbagePilePosition());
+            yield return new WaitForSecondsRealtime(5f);
+
+        }
+    }
     public override void SetDestination(Vector3 destination)
     {
         navAgent.destination = destination;
-    } 
+    }
 }
 
-    public class Rat : EnemyType
+public class Rat : EnemyType
 {
     Coroutine retargetCoroutine;
     public Rat(Transform transform, Rigidbody rb, NavMeshAgent navMeshAgent) : base(transform, rb, navMeshAgent)
     {
 
-        stats = new(5, 1, 0, 1f, 1f, 2f);
+        stats = new(3, 2, 0, 1f, 1f, 2f);
         navAgent.speed = stats.speed;
 
     }

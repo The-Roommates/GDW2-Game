@@ -8,7 +8,7 @@ public class AttackEnemyInteraction : MonoBehaviour
 
     //Enemies
     public GameObject roach;
-    public Rigidbody2D enemyRoach;
+    public Rigidbody enemyRoach;
 
     // Start is called before the first frame update
     void Start()
@@ -34,11 +34,13 @@ public class AttackEnemyInteraction : MonoBehaviour
 
     }*/
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            Vector2 dir = (transform.position - roach.transform.position).normalized;
+            Vector3 dir = (transform.position - roach.transform.position).normalized;
+            dir = new(dir.x, 0, dir.y); // dont send vertically above the map.
+            
 
             Debug.Log("Checked");
             //enemyRoach.AddForce(enemyRoach.transform.position * 100f);

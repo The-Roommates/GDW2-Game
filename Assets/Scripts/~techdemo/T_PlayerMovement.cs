@@ -1,13 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEditor;
 using UnityEngine;
 
 public class T_PlayerMovement : MonoBehaviour
 {
+    public static T_PlayerMovement instance;
     //Player Definition
+    Rigidbody rb;
     Rigidbody2D body;
-
+    [Space]
+    [SerializeField] bool useZAxis;
+    bool canMove = true;
     float speed = 4f;
     float horizontal;
     float vertical;
@@ -21,11 +26,23 @@ public class T_PlayerMovement : MonoBehaviour
     //Win
     public GameObject win;
 
+    public PlayerStats playerStats = new(10, 1, 0, 0, 0, 0, 0);
 
+    private void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else { Destroy(this); }
+    }
     // Start is called before the first frame update
     void Start()
     {
-        body = GetComponent<Rigidbody2D>();
+        if(!TryGetComponent(out Rigidbody2D body))
+        {
+            rb=GetComponent<Rigidbody>();
+        }
     }
 
     // Update is called once per frame
@@ -56,10 +73,21 @@ public class T_PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        body.velocity = new Vector2(horizontal * speed, vertical * speed);
+        Move();
 
     }
-
+    void Move()
+    {
+        if (!canMove) { return; }
+        if (body != null)
+        {
+            body.velocity = new Vector2(horizontal * speed, vertical * speed);
+        }
+        else
+        {
+            rb.velocity = new Vector3(horizontal * speed, 0, vertical * speed);
+        }
+    }
     
 
     void SweepAttack()
@@ -83,6 +111,16 @@ public class T_PlayerMovement : MonoBehaviour
     void SprayAttack()
     {
 
+    }
+
+    public void CheckKillPlayer()
+    {
+        if (playerStats.currentHP <= 0) { 
+        
+            gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            canMove = false;
+            GameManager.instance.GameOver();
+        }
     }
 
 }
